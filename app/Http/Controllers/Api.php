@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Modle;
+use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Break_;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
+
+class Api extends Controller
+{
+    public function index()
+    {
+        echo "halo";
+    }
+    public function aa()
+    {
+        // @dd($parameters);
+        echo "aa";
+    }
+    public function bb()
+    {
+        echo "bb";
+    }
+}
