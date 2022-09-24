@@ -20,7 +20,7 @@
         .top-right{position: absolute; top:10px; right:10px; width:100px; height:auto;}
         .bahaya{color:red; font-size:20px;}
         .aman{color:green; font-size:15px;}
-        .iframe{height:500px; overflow: hidden;}
+        .iframe{height:900px; overflow: hidden;}
     </style>
 @endsection
 @section('container')
@@ -60,7 +60,10 @@
                         <?php }?>
                         <div class="row" id="barcode1">
                             <?php 
-                            $src="http://localhost:8000/apiwa.html?server=".str_replace(" ","",$product->product_name).$product->product_id."&token=".md5($tgl2)."&desc=".$product->product_name;
+                            $str=$product->product_name;
+                            preg_match_all('/(?<=\b)\w/iu',$str,$matches);
+                            $result=mb_strtoupper(implode('',$matches[0]));
+                            $src=env('APP_URL_UTAMA').":8000/apiwa.html?server=".$product->tranprod_no."&token=".md5($tgl2)."&desc=".$product->product_name;
                             ?>
                             <iframe class="col-md-12 iframe" frameBorder="0" title="Api Whatsapp" src="<?=$src;?>" ></iframe>
                         </div>
