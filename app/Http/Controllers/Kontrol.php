@@ -44,6 +44,10 @@ class Kontrol extends Controller
             // @dd($lempar);           
             if (Auth::attempt($lempar)) {
                 // Authentication passed...
+                $identitys=DB::table("identity")->limit(1)->get();
+                foreach ($identitys as $identity) {
+                    $request->session()->put('number', $identity->identity_wa);
+                }
                 return redirect()->intended('home')->with(['message' => 'Selamat Datang ' . auth()->user()->user_name, 'tipe' => 'success']);
             } else {
                 return redirect()->intended('login')->with(['message' => 'Email atau Password tidak benar!', 'tipe' => 'error']);
@@ -81,11 +85,10 @@ class Kontrol extends Controller
                 if (Schema::hasTable($phalaman)) {
                     $modd = $Modle->semua($item);
                 } else {
-                    $modd = $Modle->index($phalaman);
+                    $modd = $Modle->index($phalaman); 
                 }
                 break;
         }
-
         //return halaman
         $guest = array("login", "about", "product", "search");
         if ($halaman == 'logout') {
@@ -97,11 +100,23 @@ class Kontrol extends Controller
                 'login',
                 ["posts" => $modd]
             );
-        } else {
-            return view(
-                $halaman,
-                ["posts" => $modd]
-            );
+        } else {            
+            if(isset($modd["view0"])){
+                $explode=explode("&",$modd["view1"]);
+                foreach ($explode as $key => $value) {
+                    $explode1=explode("=",$value); 
+                    $explode2[$explode1[0]]=$explode1[1]; 
+                }
+                return view(
+                    $modd["view0"],
+                    $explode2
+                );
+            }else{
+                return view(
+                    $halaman,
+                    ["posts" => $modd]
+                );
+            }
         }
     }
 }

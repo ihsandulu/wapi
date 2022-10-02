@@ -33,4 +33,18 @@ class Api extends Controller
         // echo $client->dd();
         return response()->json($client);
     }
+    public function updateallclientwa()
+    {
+        $clients=DB::table('tranprod')
+        ->where('tranprod_active','1')
+        ->get();
+        foreach ($clients as $client) {
+           if(date("Y-m-d")>$client->tranprod_outdate){
+            $input["tranprod_active"]=0;
+            DB::table('tranprod')
+            ->where('tranprod_id',$client->tranprod_id)
+            ->update($input);
+           }
+        }        
+    }
 }
