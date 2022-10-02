@@ -55,7 +55,7 @@
         <?php $products = DB::table('tranprod')
         ->leftJoin("product","product.product_id","=","tranprod.product_id")
         ->where("user_id",auth()->user()->id)
-        ->where("tranprod_active",TRUE)
+        // ->where("tranprod_active",TRUE)
         ->orderBy('product_name')
         ->paginate(50);?>
         <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
