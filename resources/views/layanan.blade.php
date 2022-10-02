@@ -56,6 +56,8 @@
         ->leftJoin("product","product.product_id","=","tranprod.product_id")
         ->where("user_id",auth()->user()->id)
         // ->where("tranprod_active",TRUE)
+        ->groupBy('tranprod.tranprod_no')
+        ->orderBy('tranprod_id','desc')
         ->orderBy('product_name')
         ->paginate(50);?>
         <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
