@@ -98,4 +98,60 @@ class Modle extends Model
         }
         return $data;
     }
+    
+    public function layanans()
+    {
+        if(isset($_POST["submit"])){
+
+            //cek apakah baru langganan atau perpanjangan
+            $inputss["tranprod_id"]=request()->post("tranprod_id");
+            $tranprodp=DB::table("tranprodp")
+            ->where($inputss)
+            ->get()
+            ->count();
+
+            $inputs["tranprod_id"]=request()->post("tranprod_id");
+            $tranprods=DB::table("tranprod")
+            ->leftJoin("product","product.product_id","=","tranprod.product_id")
+            ->where($inputs)
+            ->get();
+            foreach($tranprods as $tranprod){
+                $sekarang=date("Y-m-d");
+                if($tranprodp==0){
+                    $input["tranprod_activedate"]=date("Y-m-d");
+                    $input["tranprod_date"]=date("Y-m-d");
+                }elseif($sekarang>$tranprod->tranprod_outdate){
+                    $input["tranprod_activedate"]=date("Y-m-d");
+                    $input["tranprod_date"]=date("Y-m-d");
+                }else{
+                    $input["tranprod_activedate"]=$tranprod->tranprod_outdate;
+                    $input["tranprod_date"]=$tranprod->tranprod_outdate;
+                }
+
+                //waktu perpanjangan
+                $perpanjangan=$tranprod->product_waktu." ".$tranprod->product_masa;
+                $input["tranprod_outdate"]=date("Y-m-d",strtotime("+".$perpanjangan,strtotime($input["tranprod_activedate"])));
+                $input["tranprod_active"]=1;
+                $input["updated_at"]=date("Y-m-d H:i:s");
+                $where["tranprod_id"]=$tranprod->tranprod_id;
+                DB::table('tranprod')
+                ->where($where)
+                ->update($input);
+
+                //insert history
+                $inputp["tranprod_id"]=$tranprod->tranprod_id;
+                $inputp["tranprodp_awal"]=$input["tranprod_activedate"];
+                $inputp["tranprodp_akhir"]=$input["tranprod_outdate"];
+                $inputp["tranprodp_nominal"]=$tranprod->product_sell;
+                $where["tranprod_id"]=$tranprod->tranprod_id;
+                DB::table('tranprodp')
+                ->insert($inputp);
+            }
+            
+            $data=$input;
+        }else{
+            $data=array();
+        }
+        return $data;
+    }
 }
