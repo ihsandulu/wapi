@@ -130,7 +130,8 @@ class Modle extends Model
 
                 //waktu perpanjangan
                 $perpanjangan=$tranprod->product_waktu." ".$tranprod->product_masa;
-                $input["tranprod_outdate"]=date("Y-m-d",strtotime("+".$perpanjangan,strtotime($input["tranprod_activedate"])));
+                $input["tranprod_outdate"] = date('Y-m-d', strtotime($input["tranprod_activedate"]. ' + '.$perpanjangan));
+                // $input["tranprod_outdate"]=date("Y-m-d",strtotime("+".$perpanjangan,strtotime($input["tranprod_activedate"])));
                 $input["tranprod_active"]=1;
                 $input["updated_at"]=date("Y-m-d H:i:s");
                 $where["tranprod_id"]=$tranprod->tranprod_id;
