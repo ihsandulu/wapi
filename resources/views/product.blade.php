@@ -2,6 +2,7 @@
 @extends('templates/main')
 
 @section('header')
+
     <style>
         .img{width: 100%; height: auto;}
         .page-left{background-color:rgba(16, 167, 74, 0.1); opacity:0.1;}
@@ -17,107 +18,220 @@
         }
         .sisi-kiri{padding: 120px;}
         .sisi-kanan{padding: 120px;}
+        .red {
+        background-color: orange;
+        color: white !important;
+    }
+
+    .white {
+        background-color: none;
+        color: black;
+    }
     </style>
 @endsection
 @section('container')
 {{-- @dd($posts) --}}
 
-<?php if(isset($_POST["beli"])){
-    $user_id = auth()->user()->id;
-    $product_id = $_POST["product_id"];
-    $tranprod_date=date("Y-m-d");
-    $tranprod_outdate=date('Y-m-d', strtotime('+1 month', strtotime($tranprod_date)));
-    //penomoran
-    $nom = DB::table("tranprod")
-        ->where("tranprod_date", date("Y-m-d"))
-        ->orderBy("tranprod_id", "DESC")
-        ->limit("1")
-        ->get();
-    if ($nom->count() > 0) {
-        $noakhir = $nom->first()->tranprod_no;
-        $noakh = explode("-", $noakhir);
-        if ($noakh[2] > 999) {
-            $noak = 1;
-        } else {
-            $noak = $noakh[2] + 1;
-        }
-        $noa = str_pad($noak, 2, "0", STR_PAD_LEFT);
+
+<div class="container mt-5 mainbody">
+    <?php
+    $now = date("Y-m-d");
+    if (isset($_GET['from'])) {
+        $from = $_GET['from'];
+        $to = $_GET['to'];
     } else {
-        $noa = str_pad(1, 2, "0", STR_PAD_LEFT);
+        $from = date("Y-m-d", strtotime("-1 months", strtotime($now)));
+        $to = $now;
     }
-    $nomor = array();
-    $nomor[1] = "TRP";
-    $nomor[2] = date("Ymd");
-    $nomor[3] = $noa;
-    $nomoran = implode("-", $nomor);
-    $id = DB::table('tranprod')->insertGetId(
-        array('user_id' => $user_id, 'product_id' => $product_id, 'tranprod_no' => $nomoran,'tranprod_date'=>$tranprod_date,'tranprod_outdate'=>$tranprod_outdate)
-    );
-    //print_r(DB::getQueryLog());
+    if (isset($_GET['branchid'])) {
+        $branchid = $_GET['branchid'];
+    } else {
+        $branchid = 0;
+    }
     ?>
-    <div class="container mt-5">Halo</div>
-<?php }else{?>
-    <div class="container mt-5">
-        <div class="row mb-3">
-            <div class="col-md-6" >
-                <h1 class="text-bold">Tambah Layanan</h1>
-            </div>
-            <div align="right" class="col-md-6 m-0 mb-3"><a href="{{ url('/layanan') }}" class="btn btn-warning fa fa-mail-forward"> Kembali</a></div>
-        </div>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-            <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="#">Semua</a>
-            </li>
-            <?php 
-                $categorys = DB::table('category')->get();
-            ?>
-            @foreach ($categorys as $category)
-            <li class="nav-item">
-            <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="#">{{ $category->category_name }}</a>
-            </li>
-            @endforeach
-        </ul>
-        <script>
-            function activcategory(a){
-                $('.categoryproduct').removeClass('active');
-                $('.categoryproduct').removeClass('bg-greendark');
-                $(a).addClass('active');
-                $(a).addClass('bg-greendark');
-            }
-        </script>
+    <div class="row">
+        <?php if (!isset($_GET['product_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
+            $coltitle = "col-md-10";
+        } else {
+            $coltitle = "col-md-8";
+        } ?>
+        <div class="<?= $coltitle; ?>">
+            <h4 class="card-title"></h4>
+        </div>       
+        <?php if (!isset($_POST['new']) && !isset($_POST['edit']) && !isset($_GET['report'])) { ?>
+            <form method="post" class="col-md-2">
+            @csrf
+                <h1 class="page-header col-md-12">
+                    <button name="new" class="btn btn-info btn-block btn-lg" value="OK" style="">New</button>
+                    <input type="hidden" name="product_id" />
+                </h1>
+            </form>
+        <?php } ?>
+    </div>
+
+    <?php if (isset($_POST['new']) || isset($_POST['edit'])) { ?>
         <div class="row">
-            <?php $products = DB::table('product')
-            ->orderBy('product_name')
-            ->paginate(50);?>
-            <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
-                @foreach ($products as $product)
-                    <div class="col-md-2 p-1" >
-                        <div class="card p-3" >
-                            <img src="{{ url('/images/product/'.$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
-                            <div class="card-body mt-4">
-                                <h5 class="card-title text-center">{{ $product->product_name }}</h5>
-                                <div class="d-grid gap-2">
-                                    Rp. {{ number_format($product->product_sell,0,",",".") }} 
-                                    <form method="POST" action="{{ url('/product') }}">
-                                        @csrf 
-                                        <input type="hidden" name="product_id" value="<?=$product->product_id;?>"/>
-                                        <button name="beli" class="btn btn-success btn-block">Beli</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+            <?php if (isset($_POST['edit'])) {
+                $namabutton = 'name="change"';
+                $judul = "Update product";
+            } else {
+                $namabutton = 'name="create"';
+                $judul = "Add product";
+            } ?>
+            <div class="col-md-12">
+                <h3><?= $judul; ?></h3>
+            </div>
+            <form class="col-md-12" action="" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3 mt-3">
+                    <label for="category_id" class="form-label">Category:</label>
+                    <select class="form-control" id="category_id" name="category_id">
+                        <option value="0" <?=($posts["category_id"]==0)?"selected":"";?>>Pilih Category</option>
+                        <?php 
+                        $categorys=DB::table("category")
+                        ->orderBy("category_name","asc")
+                        ->get();
+                        foreach($categorys as $category){?>
+                         <option value="<?=$category->category_id;?>" <?=($posts["category_id"]==$category->category_id)?"selected":"";?>><?=$category->category_name;?></option>
+                        <?php }?>
+                    </select>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product_name" class="form-label">Product:</label>
+                    <input type="text" class="form-control" id="product_name" placeholder="Enter Product" name="product_name" value="<?=$posts["product_name"];?>">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product_description" class="form-label">Description:</label>
+                    <input type="text" class="form-control" id="product_description" placeholder="Enter Description" name="product_description" value="<?=$posts["product_description"];?>">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product_sell" class="form-label">Nominal:</label>
+                    <input type="number" class="form-control" id="product_sell" placeholder="Enter Nominal" name="product_sell" value="<?=$posts["product_sell"];?>">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product_waktu" class="form-label">Jangka Waktu:</label>
+                    <div>
+                    <input type="number" class="form-control col-md-1" id="product_waktu"  name="product_waktu" value="<?=$posts["product_waktu"];?>"  style="float:left;">
+                    <select class="form-control  col-md-3" id="product_masa" name="product_masa"  style="display:inline;">
+                        <option value="" <?=($posts["product_masa"]=="")?"selected":"";?>>Pilih Waktu</option> 
+                        <option value="days" <?=($posts["product_masa"]=="days")?"selected":"";?>>Days</option>                 
+                        <option value="month" <?=($posts["product_masa"]=="month")?"selected":"";?>>Month</option>                 
+                        <option value="year" <?=($posts["product_masa"]=="year")?"selected":"";?>>Year</option>                        
+                    </select>
                     </div>
-                @endforeach
-            <div class="d-flex flex-row-reverse mt-3 mb-5 col-md-12">{{ $products->links() }}</div>
-        </div> 
-    </div>
-    <div class="fixed row p-0">
-            <div class="col-md-6 p-0  page-left">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product_picture" class="form-label">Picture:</label>
+                    <input type="file" class="form-control" id="product_picture" placeholder="Enter Picture" name="product_picture" value="<?=$posts["product_picture"];?>"><br/>
+                    <?php if($posts["product_picture"]!=""){$user_image="images/product_picture/".$posts["product_picture"];}else{$user_image="images/nopicture.png";}?>
+                    <img id="product_picture_image" width="100" height="100" src="<?=url($user_image);?>"/>
+                    <script>
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                    
+                                reader.onload = function (e) {
+                                    $('#product_picture_image').attr('src', e.target.result);
+                                }
+                    
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    
+                        $("#product_picture").change(function () {
+                            readURL(this);
+                        });
+                    </script>
+                </div>
+                <input type="hidden" name="product_id" value="<?= $posts["product_id"]; ?>" />
+                <input type="hidden" name="created_at" value="<?= date("Y-m-d"); ?>" />
+                <input type="hidden" name="updated_at" value="<?= date("Y-m-d"); ?>" />
+                <button type="submit" id="submit" class="btn btn-primary col-md-5" <?= $namabutton; ?> value="OK">Submit</button>
+                <button type="button" class="btn btn-warning col-md-offset-1 col-md-5" onClick="pindah()">Back</button>
+                <script>
+                    function pindah() {
+                        window.location.href = '<?= url("product"); ?>';
+                    }
+                </script>
+            </form>
+        </div>
+    <?php } else { ?>
+        <?php if ($posts["message"] != "") { ?>
+            <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><?= $posts["message"]; ?></strong>
+                </div>
             </div>
-            <div class="col-md-6  p-0 page-right">
             </div>
-    </div>
-<?php }?>
+        <?php } ?>
+       <!--  <div class="well">
+            <form class="form-inline" action="">
+                <label for="from" class="mr-sm-2">From:</label>
+                <input type="date" class="form-control mb-2 mr-sm-2" id="from" name="from" value="<?= $from; ?>">
+                <label for="to" class="mr-sm-2">To:</label>
+                <input type="date" class="form-control mb-2 mr-sm-2" id="to" name="to" value="<?= $to; ?>">  
+                <button type="submit" class="btn btn-primary ml-2 mb-2">Search</button>
+            </form>
+        </div> -->
+        
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <table id="example" class="table table-hover table-stripped table-bordered" >
+                    <thead class="">
+                        <tr class="text-center">
+                            <?php if (!isset($_GET["report"])) { ?>
+                                <th class="col-md-2">Action</th>
+                            <?php } ?>
+                            <th class="col-md-1">No.</th>
+                            <th>Category</th>
+                            <th>Product</th>
+                            <th>Description</th>
+                            <th>Nominal</th>
+                            <th>Age</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php                 
+                        $usr = DB::table("product")
+                        ->leftJoin("category","category.category_id","=","product.category_id")
+                        ->orderBy("product_id","DESC")
+                            ->get();
+                        $no = 1;
+                        foreach ($usr as $usr) {
+                        ?>
+                            <tr id="d<?= $usr->product_id; ?>">
+                                <?php if (!isset($_GET["report"])) { ?>
+                                    <td>
+                                        <div style="" class="row">
+                                            <form method="post" class="btn-action col-md-6" style="">
+                                            @csrf
+                                                <button class="btn btn-sm btn-danger btn-block delete" onclick="return confirm('You want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
+                                                <input type="hidden" name="product_id" value="<?= $usr->product_id; ?>" />
+                                            </form>
+                                            <form method="post" class="btn-action col-md-6" style="">
+                                            @csrf
+                                                <button class="btn btn-sm btn-warning btn-block " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
+                                                <input type="hidden" name="product_id" value="<?= $usr->product_id; ?>" />
+                                            </form>
+                                        </div>
+                                    </td>
+                                <?php } ?>
+                                <td class="text-center"><?= $no++; ?></td>
+                                <td><?= $usr->category_name; ?></td>
+                                <td><?= $usr->product_name; ?></td>
+                                <td><?= $usr->product_description; ?></td>
+                                <td><?= $usr->product_sell; ?></td>
+                                <td><?= $usr->product_waktu." ".$usr->product_masa; ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php } ?> 
+</div>
 
 @endsection
 @section('footer')

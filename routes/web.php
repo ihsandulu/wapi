@@ -22,7 +22,8 @@ Route::get('/api/{fungsi}', function ($fungsi) {
     return $app->callAction($fungsi, $parameters = array("adi", "dudi"));
 });
 Route::post('/login', [Kontrol::class, 'authenticate']);
-
+Route::any('/redirectgoogle', [Kontrol::class, 'redirectToProvider']);
+Route::any('/callbackgoogle', [Kontrol::class, 'handleProviderCallback']);
 
 
 
@@ -32,4 +33,14 @@ Route::any('/{halaman}', [Kontrol::class, 'halaman']);
 // Untuk ngelink kaya storage di server yg ga support linking laravel
 Route::get('/link/{link}', function ($link) {
     Artisan::call($link . ':link');
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });

@@ -79,8 +79,10 @@
                   </div>
                </div>
                <div class="col-md-7">
-                  <div class="about_img">
-                     <figure><img src="images/ihsan.jpg" alt="#"/></figure>
+                  <div class="">
+                     <figure>
+                        <img src="images/ihsan.jpg" alt="#"/>
+                     </figure>
                   </div>
                </div>
             </div>
@@ -487,10 +489,10 @@
       </div>
       <!-- end contact -->
       <script>
-function paket(a){
-    $("#paket").val(a);
-    $('#name').focus();
-}
-        </script>
+      function paket(a){
+         $("#paket").val(a);
+         $('#name').focus();
+      }
+      </script>
       
 @endsection

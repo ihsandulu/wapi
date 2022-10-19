@@ -32,14 +32,14 @@
     
     <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="#">Semua</a>
+          <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="<?=url("/layanans");?>">Semua</a>
         </li>
         <?php 
             $categorys = DB::table('category')->get();
         ?>
         @foreach ($categorys as $category)
         <li class="nav-item">
-          <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="#">{{ $category->category_name }}</a>
+          <a id="c{{ $category->category_id }}" class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="<?=url("/layanans?id=$category->category_id");?>">{{ $category->category_name }}</a>
         </li>
         @endforeach
     </ul>
@@ -47,22 +47,37 @@
         function activcategory(a){
             $('.categoryproduct').removeClass('active');
             $('.categoryproduct').removeClass('bg-greendark');
-            $(a).addClass('active');
-            $(a).addClass('bg-greendark');
+            $('#c'+a).addClass('active');
+            $('#c'+a).addClass('bg-greendark');
         }
+        activcategory(<?=request()->get("id");?>);
     </script>
     <div class="row">
-        <?php $products = DB::table('tranprod')
+        <?php 
+        DB::enableQueryLog();
+
+        $products = DB::table('tranprod')
+        ->leftJoin("user","user.id","=","tranprod.user_id")
         ->leftJoin("product","product.product_id","=","tranprod.product_id")
         ->where("user_id",auth()->user()->id)
-        // ->where("tranprod_active",TRUE)
+        ->where(function($q){
+            if(isset($_GET["id"])){
+                $q->where("category_id",request()->get("id"));
+            }
+        })
         ->orderBy('product_name','asc')
-        ->paginate(50);?>
-        <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
-        @foreach ($products as $product)
+        ->paginate(50);
+       
+        
+        // ->get();
+        // $query = DB::getQueryLog();
+        // dd($query);
+        // echo $products->toSql();die;
+        ?>
+        <?php foreach ($products as $product){?>
         <div class="col-md-2 p-1" >
             <div class="card p-3" >
-                <img src="{{ url("/images/product/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                <img src="<?=url('/images/product_picture/'.$product->product_picture);?>" class="card-img-top" alt="{{ $product->product_name }}">
                 <div class="card-body mt-4">
                     <h5 class="card-title text-center">{{ $product->product_name }}</h5>
                     <?php 
@@ -74,6 +89,7 @@
                             $color="danger";
                         }
                      ?>
+                     <h5 class="card-title text-center text-default">{{$product->user_name}}</h5>
                     <h5 class="card-title text-center text-{{$color}}">{{$active}}</h5>
                     <div class="d-grid gap-2">
                         <div align="center"><b>Start Date:</b> 
@@ -82,7 +98,8 @@
                         <div align="center"><b>Out of Date :</b>
                             <div class="text-danger">{{ date("d M, Y",strtotime($product->tranprod_outdate)); }}</div>
                         </div>
-                        <a href="{{ url("/perpanjangs?id=".$product->tranprod_id) }}" class="btn btn-success btn-block">History</a>
+                        <a href="{{ url("/transaction?default=OK&id=".$product->tranprod_id) }}" class="btn btn-info btn-block">Transaction</a>
+                        <a href="{{ url("/perpanjangs?id=".$product->tranprod_id) }}" class="btn btn-primary btn-block">History</a><br/>
                         <form method="post">
                             @csrf
                             <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
@@ -92,8 +109,7 @@
                 </div>
             </div>
         </div>
-        @endforeach
-       <div class="d-flex flex-row-reverse mt-3 mb-5 col-md-12">{{ $products->links() }}</div>
+        <?php }?>
     </div>
       
    

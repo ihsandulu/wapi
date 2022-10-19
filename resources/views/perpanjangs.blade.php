@@ -47,7 +47,7 @@
         @foreach ($products as $product)
         <div class="col-md-12 p-1" >
             <div class="card p-3" >
-                <img src="{{ url("/images/product/".$product->product_picture) }}" class="card-img-top top-right" alt="{{ $product->product_name }}">
+                <img src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top top-right" alt="{{ $product->product_name }}">
                 <div class="card-body mt-4">
                     <h1 class="card-title text-center text-bold text-success">{{ $product->product_name }}</h1>
                     <h3 class="card-title text-center text-bold text-primary">{{ $product->tranprod_no }}</h3>

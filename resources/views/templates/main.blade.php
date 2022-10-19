@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -13,7 +14,9 @@
       <meta name="description" content="">
       <meta name="author" content="">
       <!-- bootstrap css -->
-      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+ 
       <!-- style css -->
       <link rel="stylesheet" href="css/style.css">
       <!-- Responsive-->
@@ -25,10 +28,19 @@
       <!-- Tweaks for older IEs-->
       <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" media="screen">      
+
       <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-      <style>
+
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" media="screen"> 
+      <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+      <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+
+      <style>      
         .text-bold{font-weight:bold;}
         .text-default{font-weight:normal;}
         .naik{
@@ -45,11 +57,13 @@
           box-shadow:0px 10px 25px rgba(46,223,229,0.445);
           cursor: pointer;
         }
+        .mainbody{border-radius:5px; border:#EFEEEE solid 1px; box-shadow:#FEFEFE 0px 0px 10px 10px; padding:50px;}
       </style>
       @yield("header")
    </head>
    <!-- body -->
    <body class="main-layout">
+      
     <!-- loader  -->
     <div class="loader_bg">
          <div class="loader"><img src="images/loading.gif" alt="#"/></div>
@@ -58,7 +72,7 @@
    @include('templates/navbar')
    @yield('container')
    <!--  footer -->
-   <footer>
+   <footer class="mt-5">
          <div class="footer">
             <div class="container">
                <div class="row">
@@ -120,7 +134,7 @@
                <div class="container">
                   <div class="row">
                      <div class="col-md-10 offset-md-1">
-                        <p>© 2019 All Rights Reserved. Design by <a href="https://html.design/"> Free Html Templates</a></p>
+                        <p>© 2019 All Rights Reserved. Powered by <a href="https://www.qithy.com/"> Qithy.com</a></p>
                      </div>
                   </div>
                </div>
@@ -151,7 +165,13 @@
     }
     ?>
     @include('sweetalert::alert')
-     
+    <script>
+         $(document).ready(function() {
+            $('#example').DataTable( {
+            "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]]
+            } );
+         } );              
+   </script>
     @yield("footer")
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -165,10 +185,14 @@
 
       <!-- Javascript files-->
       <script src="js/jquery.min.js"></script>
-      <script src="js/bootstrap.bundle.min.js"></script>
+      <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  
       <script src="js/jquery-3.0.0.min.js"></script>
       <!-- sidebar -->
       <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
       <script src="js/custom.js"></script>
+
+      <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
    </body>
 </html>

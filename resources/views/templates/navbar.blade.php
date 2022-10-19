@@ -85,33 +85,40 @@
                               <li class="nav-item active">
                                  <a class="nav-link" href="{{ url('/') }}">Home</a>
                               </li>
-                              <li class="nav-item">
                               @auth
+                              <li class="nav-item">
                                  <a class="nav-link" href="{{ url('/logout') }}">Logout</a>
-                              @else                    
+                              </li>
+                              <li class="nav-item">
+                              @else 
+                              <li class="nav-item">
+                                 <a class="nav-link" href="{{ url('/register') }}">Register</a>
+                              </li>
+                              <li class="nav-item">
                                  <a class="nav-link" href="{{ url('/login') }}">Login</a>
+                              </li>                   
                               @endauth
                               </li>
                               @auth
                               <?php if(auth()->user()->position_id==1){?>
                                 <li class="nav-item">
-                                  <a class="nav-link" href="{{ url('/categorys') }}"> Category </a>
+                                  <a class="nav-link" href="{{ url('/category?default=OK') }}"> Category </a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" href="{{ url('/products') }}"> Produk </a>
+                                  <a class="nav-link" href="{{ url('/product?default=OK') }}"> Produk </a>
                                 </li>
                                 <li class="nav-item">
                                   <a class="nav-link" href="{{ url('/layanans') }}">Layanan</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" href="{{ url('/transactions') }}">Transaksi</a>
+                                  <a class="nav-link" href="{{ url('/transaction?default=OK') }}">Transaksi</a>
                                 </li>
                               <?php }else{?>
                                 <li class="nav-item">
                                   <a class="nav-link" href="{{ url('/layanan') }}">Layanan</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" href="{{ url('/transaction') }}">Transaksi</a>
+                                  <a class="nav-link" href="{{ url('/transactions') }}">Transaksi</a>
                                 </li>
                                 <li class="nav-item">
                                   <a class="nav-link" href="{{ url('/tagihan') }}"> Tagihan </a>
@@ -125,11 +132,11 @@
                               @endauth
                               <?php if(Auth::check()&&auth()->user()->position_id==1){?>
                               <li class="nav-item">
-                                 <a class="nav-link" href="{{ url('/documentations') }}">Dokumentasi</a>
+                                 <a class="nav-link" href="{{ url('/documentation?default=OK') }}">Dokumentasi</a>
                               </li>
                               <?php }else{?>
                               <li class="nav-item">
-                                 <a class="nav-link" href="{{ url('/documentation') }}">Dokumentasi</a>
+                                 <a class="nav-link" href="{{ url('/documentations') }}">Dokumentasi</a>
                               </li>
                               <li class="nav-item">
                                  <a class="nav-link" href="https://wa.me/628567148813?text=Support%20TokoQit">Support</a>

@@ -27,7 +27,7 @@
         <div class="col-md-6" >
             <h1 class="text-bold">Layanan</h1>
         </div>
-        <div align="right" class="col-md-6 m-0"><a href="{{ url('/product') }}" class="btn btn-primary fa fa-plus"> Tambah Layanan</a></div>
+        <div align="right" class="col-md-6 m-0"><a href="{{ url('/products') }}" class="btn btn-primary fa fa-plus"> Tambah Layanan</a></div>
     </div>
     
     <ul class="nav nav-tabs">
@@ -62,12 +62,16 @@
         @foreach ($products as $product)
         <div class="col-md-2 p-1" >
             <div class="card p-3" >
-                <img src="{{ url("/images/product/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                <img src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
                 <div class="card-body mt-4">
                     <h5 class="card-title text-center">{{ $product->product_name }}</h5>
                     <div class="d-grid gap-2">
                         <div align="center">Out of Date : <br/>{{ date("d M, Y",strtotime($product->tranprod_outdate)); }}</div>
-                        <a href="{{ url("/layanandetail?id=".$product->tranprod_id) }}" class="btn btn-success btn-block">Lihat Detail</a>
+                        <?php if($product->tranprod_active==1){?>
+                            <a href="{{ url("/layanandetail?id=".$product->tranprod_id) }}" class="btn btn-success btn-block">Lihat Detail</a>
+                        <?php }else{?>
+                            <a href="{{ url("/perpanjangan?id=".$product->tranprod_id) }}" class="btn btn-warning btn-block">Bayar</a>
+                        <?php }?>
                     </div>
                 </div>
             </div>

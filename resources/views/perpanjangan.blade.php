@@ -47,7 +47,7 @@
         @foreach ($products as $product)
         <div class="col-md-12 p-1" >
             <div class="card p-3" >
-                <img src="{{ url("/images/product/".$product->product_picture) }}" class="card-img-top top-right" alt="{{ $product->product_name }}">
+                <img src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top top-right" alt="{{ $product->product_name }}">
                 <div class="card-body mt-4">
                     <h1 class="card-title text-center text-bold text-success">{{ $product->product_name }}</h1>
                     <h3 class="card-title text-center text-bold text-primary">{{ $product->tranprod_no }}</h3>
@@ -96,6 +96,9 @@
                                         <input type="text" class="form-control" placeholder="Atas Nama" name="transaction_an">
                                     </div>
                                     <div class="col">
+                                        <input type="text" class="form-control" placeholder="Rekening" name="transaction_rek">
+                                    </div>
+                                    <div class="col">
                                         <input type="text" class="form-control" placeholder="Bank Penerima" name="transaction_bankpenerima">
                                     </div>
                                     <div class="col">
@@ -103,7 +106,7 @@
                                     </div>
                                     <div class="col">                                        
                                         <input type="hidden" name="product_name" value="<?=$product->product_name;?>">
-                                        <input type="hidden" name="id" value="<?=request()->get('id');?>">
+                                        <input type="hidden" name="tranprod_id" value="<?=request()->get('id');?>">
                                         <input type="hidden" name="user_id" value="{{Auth()->user()->id}}">
                                         <button type="submit" name="submit" value="OK" class="btn btn-success">Konfirmasi</button>
                                     </div>                                    

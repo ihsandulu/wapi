@@ -3,8 +3,8 @@
 @section('container')
 <div class="container mt-5">
     <div class="row  d-flex justify-content-center p-5 mt-5 ">
-        <form action="{{ url("/login") }}" method="post" class="col-md-5 border p-5 rounded-3">
-            @csrf
+      <form action="{{ url("/login") }}" method="post" class="col-md-5 border p-5 rounded-3">
+        @csrf
         <h1 class="d-flex justify-content-center mb-5">Login</h1>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
@@ -24,8 +24,16 @@
             {{ $message }}
           </div>
           @enderror
-        </div>        
-        <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="row">        
+          <div class="col-md-6">          
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="col-md-6">
+            <a class="text-success mt-2"  style="float:right;" href="{{url('/register')}}">Register</a>
+            <a class="text-success mt-2"  style="float:right;" href="{{url('/redirectgoogle')}}">Google</a>
+          </div>
+        </div>
       </form>
     </div>
     
