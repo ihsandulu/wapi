@@ -25,11 +25,7 @@ Route::post('/login', [Kontrol::class, 'authenticate']);
 Route::any('/redirectgoogle', [Kontrol::class, 'redirectToProvider']);
 Route::any('/callbackgoogle', [Kontrol::class, 'handleProviderCallback']);
 
-/**
- * socialite auth
- */
-Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
-Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
+
 
 
 ///////////////Tempatkan Paling terakhir/////////////////////
