@@ -26,12 +26,16 @@
           @enderror
         </div>
         <div class="row">        
-          <div class="col-md-6">          
+          <div class="col-md-4">          
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
-          <div class="col-md-6">
-            <a class="text-success mt-2"  style="float:right;" href="{{url('/register')}}">Register</a>
-            <a class="text-success mt-2"  style="float:right;" href="{{url('/redirectgoogle')}}">Google</a>
+          <div class="col-md-4">
+            <a class="text-success mt-2 d-flex justify-content-center align-items-center" href="{{url('/register')}}">Register</a>
+          </div>
+          <div class="col-md-4">
+            <a class="text-success mt-2"  style="float:right;" href="{{url('/redirectgoogle')}}">
+              <img src="<?=url('images/google.png');?>" style="height:30px; width:auto;" />
+            </a>
           </div>
         </div>
       </form>
