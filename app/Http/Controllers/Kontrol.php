@@ -130,8 +130,8 @@ class Kontrol extends Controller
 
     public function redirectToProvider(Request $request)
         {
-            print_r($request->all());
-            exit();
+            // print_r($request->all());
+            // exit();
             return Socialite::driver('google')->redirect();
         }
       
