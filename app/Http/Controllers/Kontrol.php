@@ -62,11 +62,17 @@ class Kontrol extends Controller
     {
         $Modle = new Modle;
         $modd = $Modle->daftar($request); 
-           
-        return view(
-            'register',
-            ["posts" => $modd]
-        );
+        // dd($modd);
+        if($modd['success']==0){
+            $request->session()->put('message', $modd['message']);
+            $request->session()->put('tipe', 'warning');
+            return view(
+                'register',
+                ["posts" => $modd]
+            );
+        }else{        
+            return redirect()->intended('login')->with(['message' => 'Silahkan Login!', 'tipe' => 'success']);
+        }
          
     }
     public function halaman($halaman)

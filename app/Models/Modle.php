@@ -48,10 +48,22 @@ class Modle extends Model
             $input[$table."_date"] = date("Y-m-d");
             $input["created"] = date("Y-m-d H:i:s");
             $input["updated"] = date("Y-m-d H:i:s"); */
-            DB::table("user")->insert($input);
+            $data["success"]=0;
+            $where["user_email"]=$request->email;
+            $cari = DB::table("user")->where($where)->get()->count();
+            if($cari == 0){
+                $query = DB::table("user")->insert($input);
+                if($query > 0){
+                    $data["success"]=1;
+                }else{                    
+                    $data["message"]="Gagal Register! Silahkan coba lagi!";
+                }
+            }else{                
+                $data["message"]="Email telah terpakai!";
+            }
+            
             // echo DB::->getLastQuery();
             // die;
-            return redirect()->intended('login')->with(['message' => 'Silahkan Login!', 'tipe' => 'success']);
         }        
         return $data;
     }
