@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class Modle extends Model
 {
@@ -18,6 +19,41 @@ class Modle extends Model
         }
        
         return $role;
+    }
+    public function daftar($request){
+        $data = array();
+        $data["message"] = "";
+
+        $credentials = $request->validate([
+            'email' => 'required|email:dns',
+            'password' => 'required|min:8',
+            'username' => 'required|min:5'
+        ]);
+        if ($credentials) {
+            $input = array(
+                'user_email' => $request->email,
+                'password' => Hash::make($request->password),
+                'user_name' => $request->username,
+                'position_id' => 2,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s"),
+                
+            );
+           /*  if(request()->file($table.'_picture')){
+                $file = request()->file($table.'_picture'); 
+                $this->proses_upload($file,$table.'_picture');
+                $input[$table.'_picture']=$file->getClientOriginalName();
+            } */
+             /*  
+            $input[$table."_date"] = date("Y-m-d");
+            $input["created"] = date("Y-m-d H:i:s");
+            $input["updated"] = date("Y-m-d H:i:s"); */
+            DB::table("user")->insert($input);
+            // echo DB::->getLastQuery();
+            // die;
+            return redirect()->intended('login')->with(['message' => 'Silahkan Login!', 'tipe' => 'success']);
+        }        
+        return $data;
     }
     public function defaultnya($table){
         $data = array();

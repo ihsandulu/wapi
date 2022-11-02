@@ -25,6 +25,10 @@
           </div>
           @enderror
         </div>
+        <div class="mb-3">
+          <label for="remember" class="form-label">Remember Me</label>
+          <input value="{{ old('remember') }}" name="remember" type="checkbox" class="" id="remember">         
+        </div>
         <div class="row">        
           <div class="col-md-4">          
             <button type="submit" class="btn btn-primary">Submit</button>

@@ -22,6 +22,7 @@ Route::get('/api/{fungsi}', function ($fungsi) {
     return $app->callAction($fungsi, $parameters = array("adi", "dudi"));
 });
 Route::post('/login', [Kontrol::class, 'authenticate']);
+Route::post('/register', [Kontrol::class, 'daftar']);
 Route::any('/redirectgoogle', [Kontrol::class, 'redirectToProvider']);
 Route::any('/callbackgoogle', [Kontrol::class, 'handleProviderCallback']);
 
@@ -35,7 +36,7 @@ Route::get('/link/{link}', function ($link) {
     Artisan::call($link . ':link');
 });
 
-Route::middleware([
+/* Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
@@ -43,4 +44,4 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-});
+}); */

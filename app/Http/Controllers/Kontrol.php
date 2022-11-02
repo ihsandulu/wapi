@@ -44,8 +44,9 @@ class Kontrol extends Controller
                 'user_email' => $request->email,
                 'password' => $request->password
             );
-            // @dd($lempar);           
-            if (Auth::attempt($lempar)) {
+            // @dd($lempar);   
+            $ingat = $request->remember?true:false;        
+            if (Auth::attempt($lempar,$ingat)) {
                 // Authentication passed...
                 $identitys=DB::table("identity")->limit(1)->get();
                 foreach ($identitys as $identity) {
@@ -56,6 +57,17 @@ class Kontrol extends Controller
                 return redirect()->intended('login')->with(['message' => 'Email atau Password tidak benar!', 'tipe' => 'error']);
             }
         }
+    }
+    public function daftar(Request $request)
+    {
+        $Modle = new Modle;
+        $modd = $Modle->daftar($request); 
+           
+        return view(
+            'register',
+            ["posts" => $modd]
+        );
+         
     }
     public function halaman($halaman)
     {
@@ -129,72 +141,72 @@ class Kontrol extends Controller
     }
 
     public function redirectToProvider(Request $request)
-        {
-            // print_r($request->all());
-            // exit();
-            return Socialite::driver('google')->redirect();
-        }
+    {
+        // print_r($request->all());
+        // exit();
+        return Socialite::driver('google')->redirect();
+    }
       
       
-        //tambahkan script di bawah ini 
-        public function handleProviderCallback(\Request $request)
-        {
-            $user_google    = Socialite::driver('google')->user();
-            if($user_google){
-                DB::enableQueryLog();
-                $users=DB::table("user")
-                ->where("user_email",$user_google->getEmail())
-                ->get();
-                if($users->count()>0){
-                    foreach ($users as $user) { 
-                        $user_email=$user->user_email;
-                        $password=$user->password;   
-                        $lempar=array(
-                            'user_email'=> $user_email,
-                            'user_name'=> $user->user_name,
-                            'password'=> $password,
-                            'user_email_verified_at'=> $user->user_email_verified_at
-                        ); 
-                    } 
-                    
-                    $identitys=DB::table("identity")->limit(1)->get();
-                    foreach ($identitys as $identity) {
-                        request()->session()->put('number', $identity->identity_wa);
-                    }  
-                }else{
-                    $user_email=$user_google->getEmail();
-                    $password=uniqid('user_');
+    //tambahkan script di bawah ini 
+    public function handleProviderCallback(\Request $request)
+    {
+        $user_google    = Socialite::driver('google')->user();
+        if($user_google){
+            DB::enableQueryLog();
+            $users=DB::table("user")
+            ->where("user_email",$user_google->getEmail())
+            ->get();
+            if($users->count()>0){
+                foreach ($users as $user) { 
+                    $user_email=$user->user_email;
+                    $password=$user->password;   
                     $lempar=array(
                         'user_email'=> $user_email,
-                        'user_name'=> $user_google->getName(),
+                        'user_name'=> $user->user_name,
                         'password'=> $password,
-                        'user_email_verified_at'=> now()
-                    );  
-                    DB::table("user")
-                    ->insert($lempar); 
+                        'user_email_verified_at'=> $user->user_email_verified_at
+                    ); 
+                } 
+                
+                $identitys=DB::table("identity")->limit(1)->get();
+                foreach ($identitys as $identity) {
+                    request()->session()->put('number', $identity->identity_wa);
                 }  
-                // dd($lempar);   
-                $lempar = array(
-                    'user_email' => $user_email,
-                    'password' => $password
-                );  
-                $finduser = User::where('user_email', $user_email)->first();
-       
-            if($finduser){
-       
-                Auth::login($finduser);
-                    return redirect()->intended('home')->with(['message' => 'Selamat Datang ' . auth()->user()->user_name, 'tipe' => 'success']);
-            }
-               
-                    
-                //jika user ada maka langsung di redirect ke halaman home
-                //jika user tidak ada maka simpan ke database
-                //$user_google menyimpan data google account seperti email, foto, dsb  
-    
             }else{
-                return redirect()->intended('login')->with(['message' => 'Email atau Password tidak benar!', 'tipe' => 'error']);
-            }
+                $user_email=$user_google->getEmail();
+                $password=uniqid('user_');
+                $lempar=array(
+                    'user_email'=> $user_email,
+                    'user_name'=> $user_google->getName(),
+                    'password'=> $password,
+                    'user_email_verified_at'=> now()
+                );  
+                DB::table("user")
+                ->insert($lempar); 
+            }  
+            // dd($lempar);   
+            $lempar = array(
+                'user_email' => $user_email,
+                'password' => $password
+            );  
+            $finduser = User::where('user_email', $user_email)->first();
     
+        if($finduser){
     
+            Auth::login($finduser);
+                return redirect()->intended('home')->with(['message' => 'Selamat Datang ' . auth()->user()->user_name, 'tipe' => 'success']);
         }
+            
+                
+            //jika user ada maka langsung di redirect ke halaman home
+            //jika user tidak ada maka simpan ke database
+            //$user_google menyimpan data google account seperti email, foto, dsb  
+
+        }else{
+            return redirect()->intended('login')->with(['message' => 'Email atau Password tidak benar!', 'tipe' => 'error']);
+        }
+
+
+    }
 }
