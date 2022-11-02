@@ -150,7 +150,6 @@
       $tipe=Session::get('tipe');
       session()->forget('message');
       session()->forget('tipe');
-      session()->flush();
       switch ($tipe) {
         case 'success':          
           alert()->success('Pesan',Session::get('message'));
