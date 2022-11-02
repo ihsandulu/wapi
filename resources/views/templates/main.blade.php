@@ -148,7 +148,9 @@
     if(Session::get('message')){
       $message=Session::get('message');
       $tipe=Session::get('tipe');
-      $request->session()->forget(['message', 'tipe']);
+      session()->forget('message');
+      session()->forget('tipe');
+      session()->flush();
       switch ($tipe) {
         case 'success':          
           alert()->success('Pesan',Session::get('message'));
