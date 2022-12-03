@@ -25,6 +25,7 @@ Route::post('/login', [Kontrol::class, 'authenticate']);
 Route::post('/register', [Kontrol::class, 'daftar']);
 Route::any('/redirectgoogle', [Kontrol::class, 'redirectToProvider']);
 Route::any('/callbackgoogle', [Kontrol::class, 'handleProviderCallback']);
+Route::post('/password', [Kontrol::class, 'cpassword']);
 
 
 

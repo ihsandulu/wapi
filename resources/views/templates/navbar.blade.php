@@ -123,10 +123,10 @@
                                 <li class="nav-item">
                                   <a class="nav-link" href="{{ url('/tagihan') }}"> Tagihan </a>
                                 </li>
-                                <li class="nav-item">
-                                  <a class="nav-link" href="#">{{ auth()->user()->user_name}}</a>
-                                </li>
                               <?php }?>
+                              <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/password') }}">Password</a>
+                              </li>
                               @else                    
                                  <a class="nav-link" href="{{ url('/berita') }}">Berita</a>
                               @endauth

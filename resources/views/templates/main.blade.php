@@ -83,22 +83,12 @@
                         <li><a href="https://www.linkedin.com/in/ibadi-ichsan-208b6a32/"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
                         <li><a href="https://www.instagram.com/qithycom/"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
                      </ul>
-                     <p class="variat pad_roght2">There are many variat
-                        ions of passages of L
-                        orem Ipsum available
-                        , but the majority h
-                        ave suffered altera
-                        tion in some form, by 
+                     <p class="variat pad_roght2">Yuk follow kami.
                      </p>
                   </div>
                   <div class=" col-md-3 col-sm-6">
                      <h3>LET US HELP YOU </h3>
-                     <p  class="variat pad_roght2">There are many variat
-                        ions of passages of L
-                        orem Ipsum available
-                        , but the majority h
-                        ave suffered altera
-                        tion in some form, by 
+                     <p  class="variat pad_roght2">Pastinya perusahaan anda membutuhkan aplikasi yang membantu beban kerja karyawan. Oleh karena itu kami menawarkan bantuan pembuatan aplikasi baik web, android maupun robotik, yang dapat menyesuaikan dengan kebutuhan perusahaan anda.
                      </p>
                   </div>
                   <div class="col-md-3 col-sm-6">
@@ -113,13 +103,8 @@
                      </ul>
                   </div>
                   <div class="col-md-3 col-sm-6">
-                     <h3>OUR Design</h3>
-                     <p  class="variat">There are many variat
-                        ions of passages of L
-                        orem Ipsum available
-                        , but the majority h
-                        ave suffered altera
-                        tion in some form, by 
+                     <h3>Our Spirit</h3>
+                     <p  class="variat">Percayakan perawatan aplikasi anda pada kami.
                      </p>
                   </div>
                   <div class="col-md-6 offset-md-6">

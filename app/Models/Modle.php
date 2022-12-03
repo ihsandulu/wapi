@@ -54,6 +54,7 @@ class Modle extends Model
             if($cari == 0){
                 $query = DB::table("user")->insert($input);
                 if($query > 0){
+                    $data["data"]=implode(", ",$input);
                     $data["success"]=1;
                 }else{                    
                     $data["message"]="Gagal Register! Silahkan coba lagi!";
@@ -62,7 +63,56 @@ class Modle extends Model
                 $data["message"]="Email telah terpakai!";
             }
             
-            // echo DB::->getLastQuery();
+            // echo DB::getLastQuery();
+            // die;
+        }        
+        return $data;
+    }
+    public function cpassword($request){
+        $data = array();
+        $data["message"] = "";
+
+        $credentials = $request->validate([
+            'password' => 'required|min:8'
+        ]);
+        if ($credentials) {
+            $input = array(
+                'password' => Hash::make($request->password),
+                'updated_at' => date("Y-m-d H:i:s"),
+                
+            );
+           /*  if(request()->file($table.'_picture')){
+                $file = request()->file($table.'_picture'); 
+                $this->proses_upload($file,$table.'_picture');
+                $input[$table.'_picture']=$file->getClientOriginalName();
+            } */
+             /*  
+            $input[$table."_date"] = date("Y-m-d");
+            $input["created"] = date("Y-m-d H:i:s");
+            $input["updated"] = date("Y-m-d H:i:s"); */
+            $data["success"]=0;
+            $where["id"]=$request->user_id;
+            $cari = DB::table("user")->where($where)
+            // ->get()
+            ->count();
+            // ->toSql();
+            // echo dd($cari);
+            if($cari > 0){
+                // DB::enableQueryLog();
+                $query = DB::table("user")->where($where)->update($input);
+                // $query = DB::getQueryLog();  
+                // dd($query);
+                if($query > 0){
+                    $data["data"]="User =".$request->user_name.", Email = ".$request->user_email.", Date = ".$input["updated_at"];
+                    $data["success"]=1;
+                }else{                    
+                    $data["message"]="Password gagal dirubah! Silahkan coba lagi!";
+                }
+            }else{                
+                $data["message"]="Akses ditolak!";
+            }
+            
+            // echo DB::getLastQuery();
             // die;
         }        
         return $data;
@@ -76,16 +126,17 @@ class Modle extends Model
             $this->aktifkan();  
             $data["message"] = "Activated Success";          
         }
-
+// DB::enableQueryLog();
         //delete
         if (request()->post("delete") == "OK") {
             $usr_id = request()->post($table."_id");
             DB::table($table)            
             ->where($table."_id",$usr_id)
             ->delete();
+            
             $data["message"] = "Delete Success";
         }
-
+// $query = DB::getQueryLog(); dd($query);
         //insert
         if (request()->post("create") == "OK") {
             
@@ -320,6 +371,15 @@ class Modle extends Model
                 $input["tranprod_date"]=$tranprod->tranprod_outdate;
             }
 
+            //aktifkan layanan
+            $transaction_id=request()->post("transaction_id");
+            $inputtr["transaction_status"]=0;
+            $inputtr["updated_at"]=date("Y-m-d H:i:s");
+            $wheretr["transaction_id"]=$transaction_id;
+            DB::table('transaction')
+            ->where($wheretr)
+            ->update($inputtr);
+
             //waktu perpanjangan
             $perpanjangan=$tranprod->product_waktu." ".$tranprod->product_masa;
             $input["tranprod_outdate"] = date('Y-m-d', strtotime($input["tranprod_activedate"]. ' + '.$perpanjangan));
@@ -344,11 +404,48 @@ class Modle extends Model
         $data=$input;
         return $data;
     }
+
+    private function deleteserver(){
+         $input["tranprod_active"]=2;
+            $where["tranprod_id"]=request()->post("tranprod_id");
+            DB::table('tranprod')
+            ->where($where)
+            ->update($input);
+            $data["message"]="Server di delete.";
+            return $data;
+    }
+
+    private function aktifkanserver(){
+         $input["tranprod_active"]=1;
+            $where["tranprod_id"]=request()->post("tranprod_id");
+            DB::table('tranprod')
+            ->where($where)
+            ->update($input);
+            $data["message"]="Server di aktifkan.";
+            return $data;
+    }
+
+    private function deactiveserver(){
+         $input["tranprod_active"]=0;
+            $where["tranprod_id"]=request()->post("tranprod_id");
+            DB::table('tranprod')
+            ->where($where)
+            ->update($input);
+            $data["message"]="Server di non aktifkan.";
+            return $data;
+    }
+
     
     public function layanans()
     {
         if(isset($_POST["submit"])){
             $data= $this->aktifkan();            
+        }elseif(isset($_POST["delete"])){
+            $data= $this->deleteserver();            
+        }elseif(isset($_POST["aktif"])){
+            $data= $this->aktifkanserver();            
+        }elseif(isset($_POST["deactive"])){
+            $data= $this->deactiveserver();            
         }else{
             $data=array();
         }

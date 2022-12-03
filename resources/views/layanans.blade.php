@@ -59,10 +59,11 @@
         $products = DB::table('tranprod')
         ->leftJoin("user","user.id","=","tranprod.user_id")
         ->leftJoin("product","product.product_id","=","tranprod.product_id")
-        ->where("user_id",auth()->user()->id)
         ->where(function($q){
             if(isset($_GET["id"])){
                 $q->where("category_id",request()->get("id"));
+            }elseif(auth()->user()->id!=1){
+                $q->where("user_id",auth()->user()->id);
             }
         })
         ->orderBy('product_name','asc')
@@ -84,11 +85,15 @@
                         if($product->tranprod_active==1){
                             $active="Active";
                             $color="success";
+                        }elseif($product->tranprod_active==2){
+                            $active="Delete";
+                            $color="danger";
                         }else{
                             $active="Deactive";
-                            $color="danger";
+                            $color="warning";
                         }
                      ?>
+                     <h5 class="card-title text-center text-default">{{$product->tranprod_no}}</h5>
                      <h5 class="card-title text-center text-default">{{$product->user_name}}</h5>
                     <h5 class="card-title text-center text-{{$color}}">{{$active}}</h5>
                     <div class="d-grid gap-2">
@@ -100,11 +105,45 @@
                         </div>
                         <a href="{{ url("/transaction?default=OK&id=".$product->tranprod_id) }}" class="btn btn-info btn-block">Transaction</a>
                         <a href="{{ url("/perpanjangs?id=".$product->tranprod_id) }}" class="btn btn-primary btn-block">History</a><br/>
-                        <form method="post">
+                        <!-- <form method="post">
                             @csrf
                             <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
-                            <button type="submit" name="submit" class="btn btn-warning btn-block text-danger">Perpanjang</button>
+                            <button type="submit" name="submit" class="btn btn-warning btn-block text-danger" style="width:100%;">Perpanjang</button>
+                        </form> -->
+                        <?php if(auth()->user()->id==1 && $product->tranprod_active==1){?>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di delete! Anda yakin?');" name="delete" class="btn btn-danger btn-block text-default" style="width:100%;">Delete</button>
                         </form>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di deaktifkan! Anda yakin?');" name="deactive" class="btn btn-warning btn-block " style="width:100%;">Deaktifkan</button>
+                        </form>
+                        <?php }elseif(auth()->user()->id==1 && $product->tranprod_active==2){?>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di aktifkan! Anda yakin?');" name="aktif" class="btn btn-success btn-block " style="width:100%;">Aktifkan</button>
+                        </form>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di deaktifkan! Anda yakin?');" name="deactive" class="btn btn-warning btn-block " style="width:100%;">Deaktifkan</button>
+                        </form>
+                        <?php }else{?>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di delete! Anda yakin?');" name="delete" class="btn btn-danger btn-block text-default" style="width:100%;">Delete</button>
+                        </form>
+                        <form method="post" align="center">
+                            @csrf
+                            <input type="hidden" name="tranprod_id" value="{{ $product->tranprod_id }}"/>
+                            <button type="submit" onclick="return confirm('Server ini akan di aktifkan! Anda yakin?');" name="aktif" class="btn btn-success btn-block " style="width:100%;">Aktifkan</button>
+                        </form>
+                        <?php }?>
                     </div>
                 </div>
             </div>

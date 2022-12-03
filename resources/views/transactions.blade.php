@@ -116,6 +116,8 @@
                         ->where(function($q){
                             if(isset($_GET["id"])){
                                 $q->where("transaction.tranprod_id",request()->id);
+                            }else{
+                                 $q->where("transaction.user_id",auth()->id);
                             }
                         })
                         ->orderBy("transaction_id","DESC")
@@ -143,14 +145,11 @@
                                                 <button class="btn btn-sm btn-danger btn-block delete" onclick="return confirm('You want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"> Delete</span> </button>
                                                 <input type="hidden" name="transaction_id" value="<?= $usr->transaction_id; ?>" />
                                             </form>
-                                            <?php if($usr->tranprod_active!=1 || $usr->transaction_status!=0){?>
                                             <form method="post" class="btn-action col-md-12" style="">
                                                 @csrf
-                                                <input type="hidden" name="transaction_id" value="{{ $usr->transaction_id }}"/>
                                                 <input type="hidden" name="tranprod_id" value="{{ $usr->tranprod_id }}"/>
-                                                <button type="submit" name="aktifkan" class="btn btn-warning btn-block text-danger"><span class="fa fa-flag" style="color:white;"> Aktifkan</span> </button>
+                                                <button type="submit" name="aktifkan" class="btn btn-warning btn-block text-danger"><span class="fa fa-flag" style="color:white;"> Perpanjang</span> </button>
                                             </form>
-                                            <?php }?>
                                             <!-- <form method="post" class="btn-action col-md-6" style="">
                                             @csrf
                                                 <button class="btn btn-sm btn-warning btn-block " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>

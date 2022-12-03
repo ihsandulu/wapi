@@ -42,11 +42,16 @@
         $server=$server;
     }
     ?>
+
     function kirimpesan(message,number,server){
         setTimeout(() => {
-            $.get("<?=$url;?>",{message:message,number:number,id:server})
-            .done(function(data){	
-                
+            $.get("https://qithy.my.id/api/token",{email:'ihsan.dulu@gmail.com',password:'5Ahlussunnah6'})
+            .done(function(data){
+                let token = data.token;
+                $.get("https://qithy.my.id:8000/send-message",{email:'ihsan.dulu@gmail.com','token': token, message:message, number:number,id:server})
+                .done(function(data){	
+                    
+                });
             });
         }, 1000);  
         setTimeout(() => {

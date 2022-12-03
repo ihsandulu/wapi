@@ -12,6 +12,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Http;
 
 class Kontrol extends Controller
 {
@@ -70,13 +71,56 @@ class Kontrol extends Controller
                 'register',
                 ["posts" => $modd]
             );
-        }else{        
+        }else{ 
+             $urltoken="https://qithy.my.id/api/token?email=ihsan.dulu@gmail.com&password=5Ahlussunnah6";    
+            $response = Http::get($urltoken);
+            $token =  $response["token"];
+
+            $urlpesan="https://qithy.my.id:8000/send-message?email=ihsan.dulu@gmail.com&token=".$token."&id=server&number=08567148813&message=Pendaftar Baru : ".$modd['data'];
+            $response = Http::get($urlpesan);   
+           
             return redirect()->intended('login')->with(['message' => 'Silahkan Login!', 'tipe' => 'success']);
+        }
+         
+    }
+    
+    
+    public function cpassword(Request $request)
+    {
+        $Modle = new Modle;
+        $modd = $Modle->cpassword($request); 
+        // dd($modd);
+        if($modd['success']==0){
+            $request->session()->put('message', $modd['message']);
+            $request->session()->put('tipe', 'warning');
+            return view(
+                'password',
+                ["posts" => $modd]
+            );
+        }else{ 
+            $urltoken="https://qithy.my.id/api/token?email=ihsan.dulu@gmail.com&password=5Ahlussunnah6";    
+            $response = Http::get($urltoken);
+            $token =  $response["token"];
+
+            $urlpesan="https://qithy.my.id:8000/send-message?email=ihsan.dulu@gmail.com&token=".$token."&id=server&number=08567148813&message=Perubahan password : ".$modd['data'];
+            $response = Http::get($urlpesan);
+
+           
+            return redirect()->intended('logout')->with(['message' => 'Silahkan Login!', 'tipe' => 'success']);
         }
          
     }
     public function halaman($halaman)
     {
+        
+        $halamanlogin=array('category','product','layanans','transaction','layanan','transactions','tagihan','password','documentation');
+        $halamanadmin=array('category','product','layanans','transaction','documentation');
+        // echo Auth::check();die;
+         if (in_array($halaman, $halamanlogin)&&!Auth::check()) {
+            return view('login');
+        }elseif(in_array($halaman, $halamanadmin)&&Auth::check()&&auth()->user()->position_id!=1) {
+            return view('login');
+        } 
         $Modle = new Modle;
         $tipe = "";
         //cek nama halaman match tidak dengan nama table?
@@ -93,7 +137,7 @@ class Kontrol extends Controller
         if (request("cari")) {
             $tipe = "cari";
         } 
-
+$modd["message"] = "";
         //cek tipe halaman
         switch ($tipe) {
             case "cari":

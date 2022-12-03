@@ -65,6 +65,7 @@
                 <img src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
                 <div class="card-body mt-4">
                     <h5 class="card-title text-center">{{ $product->product_name }}</h5>
+                    <h5 class="card-title text-center">{{ $product->tranprod_no }}</h5>
                     <div class="d-grid gap-2">
                         <div align="center">Out of Date : <br/>{{ date("d M, Y",strtotime($product->tranprod_outdate)); }}</div>
                         <?php if($product->tranprod_active==1){?>
