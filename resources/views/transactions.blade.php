@@ -94,7 +94,7 @@
                 <table id="example" class="table table-hover table-stripped table-bordered" >
                     <thead class="">
                         <tr class="text-center">
-                            <?php if (!isset($_GET["report"])) { ?>
+                            <?php if (!isset($_GET["report"]) && Auth()->user()->position_id==1) { ?>
                                 <th class="col-md-1">Action</th>
                             <?php } ?>
                             <th class="col-md-1">No.</th>
@@ -117,7 +117,7 @@
                             if(isset($_GET["id"])){
                                 $q->where("transaction.tranprod_id",request()->id);
                             }else{
-                                 $q->where("transaction.user_id",auth()->id);
+                                 $q->where("transaction.user_id",Auth()->user()->id);
                             }
                         })
                         ->orderBy("transaction_id","DESC")
@@ -137,7 +137,7 @@
                             }
                         ?>
                             <tr id="d<?= $usr->transaction_id; ?>">
-                                <?php if (!isset($_GET["report"])) { ?>
+                                <?php if (!isset($_GET["report"]) && Auth()->user()->position_id==1) { ?>
                                     <td>
                                         <div style="" class="row">
                                             <form method="post" class="btn-action col-md-12" style="">

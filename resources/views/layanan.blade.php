@@ -52,10 +52,14 @@
         }
     </script>
     <div class="row">
-        <?php $products = DB::table('tranprod')
+        <?php $builder = DB::table('tranprod')
         ->leftJoin("product","product.product_id","=","tranprod.product_id")
-        ->where("user_id",auth()->user()->id)
+        ->where("user_id",auth()->user()->id);
         // ->where("tranprod_active",TRUE)
+        if(isset($_GET["expired"])){
+            $builder->where("tranprod_outdate","<=",date("Y-m-d"));
+        }
+        $products = $builder
         ->orderBy('product_name','asc')
         ->paginate(50);?>
         <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
@@ -67,7 +71,14 @@
                     <h5 class="card-title text-center">{{ $product->product_name }}</h5>
                     <h5 class="card-title text-center">{{ $product->tranprod_no }}</h5>
                     <div class="d-grid gap-2">
-                        <div align="center">Out of Date : <br/>{{ date("d M, Y",strtotime($product->tranprod_outdate)); }}</div>
+                        <div align="center">Out of Date : <br/>
+                        <?php
+                        if($product->tranprod_outdate<=date("Y-m-d")){$color="danger";}else{$color="success";}
+                        ?>
+                        <span class="text-{{$color}}">
+                        {{ date("d M, Y",strtotime($product->tranprod_outdate)); }}
+                        </span>
+                        </div>
                         <?php if($product->tranprod_active==1){?>
                             <a href="{{ url("/layanandetail?id=".$product->tranprod_id) }}" class="btn btn-success btn-block">Lihat Detail</a>
                         <?php }else{?>

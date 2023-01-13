@@ -16,6 +16,7 @@ class Modle extends Model
             $role = $this->$fungsi();
         }else{
             $role = array();
+            $role["message"]="";
         }
        
         return $role;
@@ -126,7 +127,7 @@ class Modle extends Model
             $this->aktifkan();  
             $data["message"] = "Activated Success";          
         }
-// DB::enableQueryLog();
+        // DB::enableQueryLog();
         //delete
         if (request()->post("delete") == "OK") {
             $usr_id = request()->post($table."_id");
@@ -136,7 +137,7 @@ class Modle extends Model
             
             $data["message"] = "Delete Success";
         }
-// $query = DB::getQueryLog(); dd($query);
+        // $query = DB::getQueryLog(); dd($query);
         //insert
         if (request()->post("create") == "OK") {
             

@@ -121,7 +121,7 @@
                                   <a class="nav-link" href="{{ url('/transactions') }}">Transaksi</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" href="{{ url('/tagihan') }}"> Tagihan </a>
+                                  <a class="nav-link" href="{{ url('/layanan?expired=OK') }}"> Tagihan </a>
                                 </li>
                               <?php }?>
                               <li class="nav-item">

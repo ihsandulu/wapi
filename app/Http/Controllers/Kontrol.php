@@ -137,8 +137,9 @@ class Kontrol extends Controller
         if (request("cari")) {
             $tipe = "cari";
         } 
-$modd["message"] = "";
-        //cek tipe halaman
+        $modd["message"] = "";
+
+        //cek tipe halaman model
         switch ($tipe) {
             case "cari":
                 $item = request("item");
@@ -156,6 +157,7 @@ $modd["message"] = "";
                 }
                 break;
         }
+
         //return halaman
         $guest = array("login", "about", "product", "search");
         if ($halaman == 'logout'){
