@@ -17,6 +17,17 @@
         }
         .sisi-kiri{padding: 120px;}
         .sisi-kanan{padding: 120px;}
+        .img-layanan{
+            width:50px;
+            height:auto; 
+            position: relative; 
+            left: 50%; 
+            top: 50%; 
+            transform:translate(-50%,0);
+        }
+        .line-3{height:50px;}
+        .line-5{height:100px;}
+        .btn-block{width:100%;}
     </style>
 @endsection
 @section('container')
@@ -31,14 +42,14 @@
         </div>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-            <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="#">Semua</a>
+            <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="<?=url("/products");?>">Semua</a>
             </li>
             <?php 
                 $categorys = DB::table('category')->get();
             ?>
             @foreach ($categorys as $category)
             <li class="nav-item">
-            <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="#">{{ $category->category_name }}</a>
+            <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="<?=url("/products?id=$category->category_id");?>">{{ $category->category_name }}</a>
             </li>
             @endforeach
         </ul>
@@ -51,17 +62,22 @@
             }
         </script>
         <div class="row">
-            <?php $products = DB::table('product')
-            ->orderBy('product_name')
+            <?php $builder = DB::table('product');
+            if(isset($_GET["id"])){
+                $builder->where("category_id",request()->get("id"));
+            }
+            $products = $builder->orderBy('product_name')
             ->paginate(50);?>
             <div class="d-flex flex-row-reverse mt-1 col-md-12">{{ $products->links() }}</div>
                 @foreach ($products as $product)
                     <div class="col-md-2 p-1" >
                         <div class="card p-3" >
-                            <img src="{{ url('/images/product_picture/'.$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                            <div class="line-3">
+                            <img src="{{ url('/images/product_picture/'.$product->product_picture) }}" class="card-img-top img-layanan" alt="{{ $product->product_name }}">
+                            </div>
                             <div class="card-body mt-4">
-                                <h5 class="card-title text-center">{{ $product->product_name }}</h5>
-                                <div class="d-grid gap-2">
+                                <h5 class="card-title text-center line-3">{{ $product->product_name }}</h5>
+                                <div class="d-grid gap-2 text-center">
                                     Rp. {{ number_format($product->product_sell,0,",",".") }} 
                                     <form method="POST" action="">
                                         @csrf 

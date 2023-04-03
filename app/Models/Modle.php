@@ -6,19 +6,52 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class Modle extends Model
 {
     public  function index($fungsi)
     {    
         $role=method_exists($this, $fungsi);
-        if($role){
-            $role = $this->$fungsi();
+        $roles = array();
+        if($role){     
+            $request = Request();       
+            $roles = $this->$fungsi($request);
+            if(!isset($roles["message"])){
+                $roles["message"]="";
+            }
         }else{
-            $role = array();
-            $role["message"]="";
+            $roles["message"]="";
         }
        
+        return $roles;
+    }
+    public function layanandetail($request){
+        $role = array();
+        $role["message"]="";
+        if(isset($_POST["forward_number"])){
+            $input["forward_number"]=$request->post("forward_number");
+            $input["tranprod_id"]=$request->post("tranprod_id");
+            $forward=DB::table("forward")
+            ->insertGetId($input);
+            if($forward){
+                $role["message"]="Nomor berhasil diinput.";
+            }else{
+                $role["message"]="Nomor gagal diinput.";
+            }
+        }
+        
+        if(isset($_POST["delete"])){
+            $forward=DB::table("forward")     
+            ->where("forward_id",$request->post("forward_id"))
+            ->delete();
+            if($forward){
+                $role["message"]="Nomor berhasil Didelete.";
+            }else{
+                $role["message"]="Nomor gagal Didelete.";
+            }
+        }
+
         return $role;
     }
     public function daftar($request){
@@ -296,10 +329,6 @@ class Modle extends Model
         }
         return $posisinya;
     }
-    public function layanandetail()
-    {
-        return array();
-    }
     public function perpanjangan()
     {
         if(isset($_POST["submit"])){
@@ -411,7 +440,7 @@ class Modle extends Model
             $where["tranprod_id"]=request()->post("tranprod_id");
             DB::table('tranprod')
             ->where($where)
-            ->update($input);
+            ->delete();
             $data["message"]="Server di delete.";
             return $data;
     }

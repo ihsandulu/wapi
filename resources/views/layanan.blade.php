@@ -17,6 +17,16 @@
         }
         .sisi-kiri{padding: 120px;}
         .sisi-kanan{padding: 120px;}
+        .img-layanan{
+            width:50px;
+            height:auto; 
+            position: relative; 
+            left: 50%; 
+            top: 50%; 
+            transform:translate(-50%,0);
+        }
+        .line-3{height:50px;}
+        .line-5{height:100px;}
     </style>
 @endsection
 @section('container')
@@ -32,14 +42,14 @@
     
     <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="#">Semua</a>
+          <a class="nav-link categoryproduct active bg-greendark" onclick="activcategory(this)" aria-current="page" href="<?=url("/layanan");?>">Semua</a>
         </li>
         <?php 
             $categorys = DB::table('category')->get();
         ?>
         @foreach ($categorys as $category)
         <li class="nav-item">
-          <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="#">{{ $category->category_name }}</a>
+          <a class="nav-link categoryproduct" onclick="activcategory(this)" aria-current="page" href="<?=url("/layanan?id=$category->category_id");?>">{{ $category->category_name }}</a>
         </li>
         @endforeach
     </ul>
@@ -59,6 +69,13 @@
         if(isset($_GET["expired"])){
             $builder->where("tranprod_outdate","<=",date("Y-m-d"));
         }
+        $builder->where(function($q){
+            if(isset($_GET["id"])){
+                $q->where("category_id",request()->get("id"));
+            }elseif(auth()->user()->id!=1){
+                $q->where("user_id",auth()->user()->id);
+            }
+        });
         $products = $builder
         ->orderBy('product_name','asc')
         ->paginate(50);?>
@@ -66,9 +83,11 @@
         @foreach ($products as $product)
         <div class="col-md-2 p-1" >
             <div class="card p-3" >
-                <img src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                <div class="line-3">
+                <img class="img-layanan" src="{{ url("/images/product_picture/".$product->product_picture) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                </div>
                 <div class="card-body mt-4">
-                    <h5 class="card-title text-center">{{ $product->product_name }}</h5>
+                    <h5 class="card-title text-center line-3">{{ $product->product_name }}</h5>
                     <h5 class="card-title text-center">{{ $product->tranprod_no }}</h5>
                     <div class="d-grid gap-2">
                         <div align="center">Out of Date : <br/>

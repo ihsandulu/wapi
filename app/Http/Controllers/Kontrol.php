@@ -112,7 +112,7 @@ class Kontrol extends Controller
     }
     public function halaman($halaman)
     {
-        
+        // echo $halaman;die;
         $halamanlogin=array('category','product','layanans','transaction','layanan','transactions','tagihan','password','documentation');
         $halamanadmin=array('category','product','layanans','transaction','documentation');
         // echo Auth::check();die;

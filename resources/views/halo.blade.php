@@ -3,21 +3,21 @@
 @section('container')    
       
       <section class="banner_main">
-         <div id="myCarousel" class="carousel slide banner" data-ride="carousel">
-            <ol class="carousel-indicators">
-               <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-               <li data-target="#myCarousel" data-slide-to="1"></li>
-               <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
+         <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+               <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+               <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+               <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
             <div class="carousel-inner">
                <div class="carousel-item active">
-                  <div class="container">
-                     <div class="carousel-caption relative">
-                        <div class="row">
+                  <img src="<?=url('/');?>/images/banner1.jpg" class="d-block w-100 " style="opacity:0.7;">
+                  <div class="carousel-caption d-none d-md-block" style="top:30% !important;">
+                     <div class="row ">
                            <div class="col-md-7 offset-md-5">
                               <div class="text-bg">
-                                 <h1> Kecepatan <br>Pengiriman Pesan</h1>
-                                 <span>Kami berupaya menjaga kestabilan server agar pengiriman pesan tidak menghadapi kendala.</span>
+                                 <h1 class="mb-2"> Kecepatan <br>Pengiriman Pesan</h1>
+                                 <span style="text-shadow:#008B8B 0px 0px 20px;">Kami berupaya menjaga kestabilan server agar pengiriman pesan tidak menghadapi kendala.</span>
                                  <!-- <a class="read_more" href="Javascript:void(0)">Read More</a> -->
                               </div>
                            </div>
@@ -26,13 +26,13 @@
                   </div>
                </div>
                <div class="carousel-item">
-                  <div class="container">
-                     <div class="carousel-caption relative">
-                        <div class="row">
+                  <img src="<?=url('/');?>/images/banner1.jpg" class="d-block w-100" alt="...">
+                  <div class="carousel-caption d-none d-md-block" style="top:30% !important;">
+                     <div class="row">
                            <div class="col-md-7 offset-md-5">
                               <div class="text-bg">
-                                 <h1> Support <br>Multi Bahasa</h1>
-                                 <span>Dengan supportnya layanan API Whatsapp kami dalam berbagai bahasa pemrograman, amat membantu developer mewujudkan kretifitas mereka dalam mengolah sintak.</span>
+                                 <h1 class="mb-2"> Support <br>Multi Bahasa</h1>
+                                 <span style="text-shadow:#008B8B 0px 0px 20px;">Dengan supportnya layanan API Whatsapp kami dalam berbagai bahasa pemrograman, amat membantu developer mewujudkan kretifitas mereka dalam mengolah sintak.</span>
                                  <!-- <a class="read_more" href="Javascript:void(0)">Read More</a> -->
                               </div>
                            </div>
@@ -41,13 +41,13 @@
                   </div>
                </div>
                <div class="carousel-item">
-                  <div class="container">
-                     <div class="carousel-caption relative">
-                        <div class="row">
+                  <img src="<?=url('/');?>/images/banner1.jpg" class="d-block w-100" alt="...">
+                  <div class="carousel-caption d-none d-md-block" style="top:30% !important;">
+                     <div class="row">
                            <div class="col-md-7 offset-md-5">
                               <div class="text-bg">
-                                 <h1> Hubungi <br>Kami</h1>
-                                 <span>Anda dapat menghubungi kami via whatsapp kapan saja ketika anda membutuhkannya.</span>
+                                 <h1 class="mb-2"> Hubungi <br>Kami</h1>
+                                 <span style="text-shadow:#008B8B 0px 0px 20px;">Anda dapat menghubungi kami via whatsapp kapan saja ketika anda membutuhkannya.</span>
                                  <!-- <a class="read_more" href="Javascript:void(0)">Read More</a> -->
                               </div>
                            </div>
@@ -56,15 +56,16 @@
                   </div>
                </div>
             </div>
-            <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-            <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-            <span class="sr-only">Next</span>
-            </a>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+               <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+               <span class="carousel-control-next-icon" aria-hidden="true"></span>
+               <span class="visually-hidden">Next</span>
+            </button>
          </div>
+         
       </section>
       <!-- end banner -->
       <!-- about -->

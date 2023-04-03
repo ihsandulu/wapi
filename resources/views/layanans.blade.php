@@ -29,6 +29,17 @@
         </div>
        <!--  <div align="right" class="col-md-6 m-0"><a href="{{ url('/product') }}" class="btn btn-primary fa fa-plus"> Tambah Layanan</a></div> -->
     </div>
+
+    <?php if ($posts["message"] != "") { ?>
+            <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><?= $posts["message"]; ?></strong>
+                </div>
+            </div>
+            </div>
+        <?php } ?>
     
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -66,7 +77,8 @@
                 $q->where("user_id",auth()->user()->id);
             }
         })
-        ->orderBy('product_name','asc')
+        ->orderBy('tranprod_outdate','asc')
+        ->orderBy('tranprod_active','asc')
         ->paginate(50);
        
         
