@@ -26,6 +26,8 @@ class Kontrol extends Controller
             return view('halo');
         }
     }
+
+    
     public function logout()
     {
         Auth::logout();
@@ -148,7 +150,10 @@ class Kontrol extends Controller
                 break;
             default:
                 $item = strtolower($phalaman);
-                if(request()->get("default")){
+                if(request()->get("fungsi")){
+                    $fungsi=request()->get("fungsi");
+                    $modd = $Modle->$fungsi(); 
+                }elseif (request()->get("default")) {
                     $modd = $Modle->defaultnya($phalaman); 
                 }elseif (Schema::hasTable($phalaman)) {
                     $modd = $Modle->semua($item);

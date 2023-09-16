@@ -1,4 +1,4 @@
-
+<?php date_default_timezone_set("Asia/Bangkok");?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -39,10 +39,11 @@
       <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" media="screen"> 
       <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
       <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+      <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js"></script>
 
       
         <!-- Core theme CSS (includes Bootstrap)-->
-        <!-- <link href="css/styles.css" rel="stylesheet" /> -->
+        <link href="css/styles.css" rel="stylesheet" />
 
 
       <style>      
@@ -64,10 +65,80 @@
         }
         .mainbody{border-radius:5px; border:#EFEEEE solid 1px; box-shadow:#FEFEFE 0px 0px 10px 10px; padding:50px;}
       </style>
+      
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+      <link rel="stylesheet" href="{{ url('/css/whatsapp-editor.css') }}">
       @yield("header")
    </head>
    <!-- body -->
    <body class="main-layout">
+      
+      <?php
+      $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+      $domainName = $_SERVER['HTTP_HOST'];
+      $currentURL = $protocol . $domainName;
+      $parse = parse_url($currentURL);
+
+      if (isset($parse['host'])) {
+         $domain = $protocol.$parse['host'];
+      } else {
+         $domain = "http://localhost";
+      }
+
+      ?>
+      <iframe id="iframai" style="z-index: 1000; position:fixed; bottom:30px !important; right:30px !important; height:375.6px; width:250px; box-shadow: #4444445f 0px 0px 10px;" src="<?=$domain;?>:8000/botai?id=33" title="Bot AI">
+      </iframe>
+      <button id="iframaiclose" onclick="tutupbotai()" style="z-index: 1000; color:red; position:absolute; bottom:380px; right:34px; padding:5px; width:20px; height:20px;"><span style="position:absolute; top:-5px; right:5px;">x</span></button>
+      <style>
+      
+
+      .robot-container {
+         position: relative;
+         z-index: 1000;
+      }
+
+      .robot {
+         width: 150px;
+         height: auto;
+         transition: transform 0.3s ease-in-out;
+      }
+
+      .robot:hover {
+         transform: translateY(-20px);
+      }
+
+      @keyframes moveRobot {
+         0%, 100% {
+            transform: translateX(0);
+         }
+         50% {
+            transform: translateX(10px);
+         }
+      }
+
+      .robot-container:hover .robot {
+         animation: moveRobot 10s linear infinite;
+      }
+
+      </style>
+      <a class="robot-container" href="#"  onclick="bukabotai()" id="imgai" style="position:fixed; bottom:30px; right:30px; width:50px; height:auto;">
+         <img src="<?=$domain;?>:8000/gerakai.png" alt="Robot" class="robot">
+      </a>
+      
+      <script>
+         function tutupbotai(){
+            $("#iframai").hide();
+            $("#iframaiclose").hide();
+            $("#imgai").show();            
+         }
+         tutupbotai();
+         function bukabotai(){
+            $("#iframai").show();
+            $("#iframaiclose").show();
+            $("#imgai").hide();
+         }
+      </script>
+
       <div class="d-flex" id="wrapper">
       
          <!-- loader  -->
@@ -203,6 +274,10 @@
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
          <!-- Core theme JS-->
          <script src="js/scripts.js"></script>
+         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+         <script type="text/javascript" src="{{url('/js/whatsapp-editor.js')}}"></script>
+
+         
       </div>
    </body>
 </html>

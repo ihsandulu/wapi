@@ -99,9 +99,33 @@
                         </span>
                         </div>
                         <?php if($product->tranprod_active==1){?>
-                            <a href="{{ url("/layanandetail?id=".$product->tranprod_id) }}" class="btn btn-success btn-block">Lihat Detail</a>
+
+                            <?php 
+                            //whatsapp server
+                            if($product->category_id==1){?>
+                            <a href="<?= url("/layanandetail?id=".$product->tranprod_id."&layananid=".$product->tranprod_id."&layananname=".$product->tranprod_no);?>" class="btn btn-success btn-block">Lihat Detail</a>
+                            <?php }?>
+
+                            <?php 
+                            //chat ai
+                            if($product->category_id==2){?>
+                            <a href="<?= url("/layananchataidetail?id=".$product->tranprod_id."&cat=".$product->category_id);?>" class="btn btn-success btn-block">Lihat Detail</a>
+                            <?php }?>
+
+                            <?php 
+                            //chat ai
+                            if($product->category_id==3){?>
+                            <a href="<?= url("/layananchataiwadetail?id=".$product->tranprod_id."&layananid=".$product->tranprod_id."&layananname=".$product->tranprod_no);?>" class="btn btn-success btn-block">Lihat Detail</a>
+                            <?php }?>
+
+                            <?php 
+                            //whatsapp server
+                            if($product->category_id==4){?>
+                            <a href="<?= url("/layanandetail?id=".$product->tranprod_id."&layananid=".$product->tranprod_id."&layananname=".$product->tranprod_no);?>" class="btn btn-success btn-block">Lihat Detail</a>
+                            <?php }?>
+
                         <?php }else{?>
-                            <a href="{{ url("/perpanjangan?id=".$product->tranprod_id) }}" class="btn btn-warning btn-block">Bayar</a>
+                            <a href="<?= url("/perpanjangan?id=".$product->tranprod_id);?>" class="btn btn-warning btn-block">Bayar</a>
                         <?php }?>
                     </div>
                 </div>

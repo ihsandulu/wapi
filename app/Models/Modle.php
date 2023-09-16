@@ -54,6 +54,162 @@ class Modle extends Model
 
         return $role;
     }
+    public function layananchataidetail($request){
+        $role = array();
+        $role["message"]="";            
+        $table="chatdata";
+
+        if (request()->has("submit")) {
+            $input = array();
+            foreach (request()->post() as $e => $f) {
+                if ($e != "submit" && $e != $table."_id") {
+                    $input[$e] = request()->post($e);
+                }
+            }
+            if(request()->post("submit")=="insert"){
+                $query=DB::table($table)
+                ->insertGetId($input);
+                if($query){
+                    $role["message"]="Data berhasil diinput.";
+                }else{
+                    $role["message"]="Data gagal diinput.";
+                }
+            }
+            if(request()->post("submit")=="update"){
+                $where[$table."_id"] = request()->post($table."_id");
+                $query = DB::table($table)
+                ->where($where)
+                ->update($input);
+                // dd($where)  ;
+                if($query){
+                    $role["message"]="Data berhasil diinput.";
+                }else{
+                    $role["message"]="Data gagal diinput.";
+                }
+            }
+        }
+        
+        if(isset($_POST["delete"])){
+            $forward=DB::table($table)     
+            ->where($table."_id",$request->post($table."_id"))
+            ->delete();
+            if($forward){
+                $role["message"]="Data berhasil Didelete.";
+            }else{
+                $role["message"]="Data gagal Didelete.";
+            }
+        }
+
+        return $role;
+    }
+    public function layananchatcontact($request){
+        $role = array();
+        $role["message"]="";            
+        $table="chatcontact";
+
+            // dd($request);
+        if (request()->has("submit")) {
+            $input = array();
+            foreach (request()->post() as $e => $f) {
+                if ($e != "submit" && $e != $table."_id") {
+                    $input[$e] = request()->post($e);
+                }
+            }
+            if(request()->post("submit")=="insert"){
+                $query=DB::table($table)
+                ->insertGetId($input);
+                if($query){
+                    $role["message"]="Data berhasil diinput.";
+                }else{
+                    $role["message"]="Data gagal diinput.";
+                }
+            }
+            if(request()->post("submit")=="update"){
+                $where[$table."_id"] = request()->post($table."_id");
+                $query = DB::table($table)
+                ->where($where)
+                ->update($input);
+                // dd($where)  ;
+                if($query){
+                    $role["message"]="Data berhasil diinput.";
+                }else{
+                    $role["message"]="Data gagal diinput.";
+                }
+            }
+        }
+        
+        if(isset($_POST["delete"])){
+            $forward=DB::table($table)     
+            ->where($table."_id",$request->post($table."_id"))
+            ->delete();
+            if($forward){
+                $role["message"]="Data berhasil Didelete.";
+            }else{
+                $role["message"]="Data gagal Didelete.";
+            }
+        }
+
+        return $role;
+    }
+    
+    public function layananchatusaha($request){
+        $role = array();
+        $role["message"]="";            
+        $table="chatusaha";
+
+            // dd($request);
+        if (request()->has("submit")) {
+            $input = array();
+            foreach (request()->post() as $e => $f) {
+                if ($e != "submit" && $e != $table."_id") {
+                    $input[$e] = request()->post($e);
+                }
+            }
+            
+            $input1["tranprod_id"]=request()->post("tranprod_id");
+            $builder=DB::table($table)
+            ->where($input1);
+            // dd($builder->toSql());
+            // dd(request()->post("tranprod_id"));
+            $chatusaha=$builder->get();
+            if($chatusaha->count()>0){
+                foreach ($chatusaha as $value) {
+                    $idn=$table."_id";
+                    $where[$table."_id"] = $value->$idn;
+                    $query = DB::table($table)
+                    ->where($where)
+                    ->update($input);
+                    // dd($where)  ;
+                    if($query){
+                        $role["message"]="Data berhasil diinput.";
+                    }else{
+                        $role["message"]="Data gagal diinput.";
+                    }
+                }
+            }else{
+                $query=DB::table($table)
+                ->insertGetId($input);
+                if($query){
+                    $role["message"]="Data berhasil diinput.";
+                }else{
+                    $role["message"]="Data gagal diinput.";
+                }
+            }
+        }
+        
+        if(isset($_POST["delete"])){
+            $forward=DB::table($table)     
+            ->where($table."_id",$request->post($table."_id"))
+            ->delete();
+            if($forward){
+                $role["message"]="Data berhasil Didelete.";
+            }else{
+                $role["message"]="Data gagal Didelete.";
+            }
+        }
+
+        return $role;
+    }
     public function daftar($request){
         $data = array();
         $data["message"] = "";
@@ -521,5 +677,119 @@ class Modle extends Model
         }else{
             return array();
         }
+    }
+
+    
+    public function wablast(){
+        // dd("ok");
+        $data = array();
+        $data["message"] = "";
+        $table="wablast";
+
+        //aktifkan layanan
+        if(isset($_POST["aktifkan"])){
+            $this->aktifkan();  
+            $data["message"] = "Activated Success";          
+        }
+
+        //delete
+        if (request()->post("delete") == "OK") {
+            $usr_id = request()->post($table."_id");
+            DB::table($table)            
+            ->where($table."_id",$usr_id)
+            ->delete();
+            $data["message"] = "Delete Success";
+        }
+
+        //insert
+        if (request()->post("create") == "OK") { 
+            foreach (request()->post() as $e => $f) {
+                if ($e != 'create' && $e != $table.'_id') {
+                    $input[$e] = request()->post($e);
+                }
+            }
+
+            $wablast_messagewa = $input["wablast_message"];
+            $wablast_messagewa = preg_replace('/<p>\s*(.*?)\s*<\/p>/', '$1', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<bold>\s*(.*?)\s*<\/bold>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<b>\s*(.*?)\s*<\/b>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<strong>\s*(.*?)\s*<\/strong>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<i>\s*(.*?)\s*<\/i>/', '_$1_ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<em>\s*(.*?)\s*<\/em>/', '_$1_ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<strike>\s*(.*?)\s*<\/strike>/', '~$1~ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<span style="text-decoration: line-through;">\s*(.*?)\s*<\/span>/', '~$1~ ', $wablast_messagewa);
+            $input["wablast_messagewa"]=$wablast_messagewa;
+
+            // echo $output; 
+
+            if(request()->file($table.'_picture')){
+                $file = request()->file($table.'_picture'); 
+                $this->proses_upload($file,$table.'_picture');
+                $input[$table.'_picture']=$file->getClientOriginalName();
+            }
+            DB::table($table)->insert($input);
+            // echo DB::->getLastQuery();
+            // die;
+            $data["message"] = "Insert Data Success";
+            
+        }
+        //echo $_POST["create"];die;
+
+        //update
+        if (request()->post("change") == "OK") {
+            foreach (request()->post() as $e => $f) {
+                if ($e != 'change' && $e != $table.'_picture') {
+                    $input[$e] = request()->post($e);
+                }
+            }
+
+            $wablast_messagewa = $input["wablast_message"];
+            $wablast_messagewa = preg_replace('/<p>\s*(.*?)\s*<\/p>/', '$1', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<bold>\s*(.*?)\s*<\/bold>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<b>\s*(.*?)\s*<\/b>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<strong>\s*(.*?)\s*<\/strong>/', '*$1* ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<i>\s*(.*?)\s*<\/i>/', '_$1_ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<em>\s*(.*?)\s*<\/em>/', '_$1_ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<strike>\s*(.*?)\s*<\/strike>/', '~$1~ ', $wablast_messagewa);
+            $wablast_messagewa = preg_replace('/<span style="text-decoration: line-through;">\s*(.*?)\s*<\/span>/', '~$1~ ', $wablast_messagewa);
+            $input["wablast_messagewa"]=$wablast_messagewa;
+
+            if(request()->file($table.'_picture')){
+                $file = request()->file($table.'_picture'); 
+                $this->proses_upload($file,$table.'_picture');
+                $input[$table.'_picture']=$file->getClientOriginalName();
+            }
+            // dd($input);
+            DB::table($table)
+            ->where($table."_id",request()->post($table."_id"))
+            ->update($input);
+            $data["message"] = "Update Success";
+            //echo DB::->last_query();die;
+        }
+
+        
+        //cek data
+        if (request()->post($table."_id")) {
+            $usrd[$table."_id"] = request()->post($table."_id");
+        } else {
+            $usrd[$table."_id"] = 0;
+        }
+        $us = DB::table($table)
+            ->where($usrd)
+            ->get();
+        //echo $this->akunting->getLastquery();
+        //die;
+        if ($us->count() > 0) {
+            foreach ($us as $usr) {
+                foreach (DB::getSchemaBuilder()->getColumnListing($table) as $field) {
+                    $data[$field] = $usr->$field;
+                }
+            }
+        } else {
+            foreach (DB::getSchemaBuilder()->getColumnListing($table) as $field) {
+                $data[$field] = "";
+            }
+        }
+        return $data;
     }
 }

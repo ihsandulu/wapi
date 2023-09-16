@@ -22,6 +22,9 @@
         .aman{color:green; font-size:15px;}
         .iframe{height:900px; overflow: hidden;}
         .width100{width:100%!important;}
+        .atas{color:black;}
+        .bawah{color:grey;}
+        .pl-2{padding-left: 10px!important;}
     </style>
 @endsection
 @section('container')
@@ -29,56 +32,92 @@
 <hr/>
 <div class="container mt-5">
     <div class="row mb-3">
-        <div class="col-md-7" >
+        <div class="col-md-10" >
             <h1 class="text-bold">Detail Layanan</h1>
         </div>
-        <div align="right" class="col-md-2 m-0 mb-3 p-1"><a href="{{ url('/mcategory?layananid='.$_GET['layananid'].'&layananname='.$_GET['layananname']) }}" class="btn btn-secondary width100"> Kat. Member</a></div>
-        <div align="right" class="col-md-1 m-0 mb-3 p-1"><a href="{{ url('/member?layananid='.$_GET['layananid'].'&layananname='.$_GET['layananname']) }}" class="btn btn-secondary width100"> Member</a></div>
-        <div align="right" class="col-md-1 m-0 mb-3 p-1"><a href="{{ url('/blast?layananid='.$_GET['layananid'].'&layananname='.$_GET['layananname']) }}" class="btn btn-secondary width100"> Pesan</a></div>
+        
+        <div align="right" class="col-md-1 m-0 mb-3 p-1"><a href="{{ url('/chathistory?layananid='.$_GET['layananid'].'&layananname='.$_GET['layananname']) }}" class="btn btn-secondary width100"> Pesan</a></div>
         <div align="right" class="col-md-1 m-0 mb-3 p-1"><a href="{{ url('/layanan') }}" class="btn btn-warning width100"> Kembali</a></div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12">
             <form method="post" class="was-validated">
                 @csrf
                 <div class="mb-3 mt-3">
-                    <label for="uname" class="form-label">Forward Whatsapp:</label>
-                    <input type="tel" class="form-control" id="forward_number" placeholder="Enter Whatsapp" name="forward_number" required>
+                    <label for="uname" class="form-label">Tanya:</label>
+                    <input type="tel" class="form-control" id="chatdata_tanya" placeholder="Enter Question" name="chatdata_tanya" required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                     <input type="hidden" name="tranprod_id" value="<?=$_GET["id"];?>"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="mb-3 mt-3">
+                    <label for="uname" class="form-label">Jawab:</label>
+                    <input type="tel" class="form-control" id="chatdata_jawab" placeholder="Enter Answer" name="chatdata_jawab" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                    <input type="hidden" name="tranprod_id" value="<?=$_GET["id"];?>"/>
+                </div>
+                <button onclick="bersih()" type="button" class="btn btn-warning">Clear</button>
+                <button id="submit" name="submit" value="insert" type="submit" class="btn btn-primary">Submit</button>
+                <input type="hidden" id="chatdata_id" name="chatdata_id"/>
             </form>
         </div>
-        <div class="col-6">
-            <table class="table">
+        <div class="col-12 mt-5">
+            <table id="example" class="table table-hover table-stripped table-bordered" >
                 <thead>
                     <tr>
-                        <th class="col-2">Action</th>
-                        <th>Forward Whatsapp</th>
+                        <th class="col-1">Action</th>
+                        <th>Tanya-Jawab</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $forward=DB::table("forward")
+                    <?php $chatdata=DB::table("chatdata")
                     ->where("tranprod_id",$_GET["id"])
                     ->get();
-                    foreach ($forward as $forward) {?>
+                    foreach ($chatdata as $chatdata) {?>
                     <tr>
-                        <td>
-                            <form method="post">      
-                                @csrf                      
-                                <button type="submit" name="delete" class="btn btn-danger btn-xs fa fa-close"></button>
-                                <input type="hidden" name="forward_id" value="<?=$forward->forward_id;?>"/>
-                            </form>
+                        <td class="">
+                            <div class="row">
+                                <form method="post" class="btn-action col-md-6">      
+                                    @csrf                      
+                                    <button onclick="return confirm('You want to delete?');" type="submit" name="delete" class="btn btn-danger btn-xs fa fa-close"></button>
+                                    <input type="hidden" name="chatdata_id" value="<?=$chatdata->chatdata_id;?>"/>
+                                </form>
+                                <form method="post" class="btn-action col-md-6" style="">
+                                @csrf
+                                    <button onclick="editform('<?=$chatdata->chatdata_tanya;?>','<?=$chatdata->chatdata_jawab;?>','<?=$chatdata->chatdata_id;?>')" type="button" class="btn btn-sm btn-warning btn-block " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
+                                    <input type="hidden" name="chatdata_id" value="<?= $chatdata->chatdata_id; ?>" />
+                                </form>
+                            </div>
                         </td>
-                        <td>
-                            <?=$forward->forward_number;?>
+                        <td class="pl-2">
+                            <div>
+                                <div class="atas">Tanya :</div>
+                                <div class="bawah"><?=$chatdata->chatdata_tanya;?></div>
+                            </div>
+                            <div>
+                                <div class="atas">Jawab :</div>
+                                <div class="bawah"><?=$chatdata->chatdata_jawab;?></div>
+                            </div>
                         </td>
                     </tr>
                     <?php }?>
                 </tbody>
             </table>
+            <script>
+                function bersih(){
+                    $("#chatdata_tanya").val("");
+                    $("#chatdata_jawab").val("");
+                    $("#chatdata_id").val("");
+                    $("#submit").val("insert");
+                }
+                function editform(a,b,c){
+                    $("#chatdata_tanya").val(a);
+                    $("#chatdata_jawab").val(b);
+                    $("#chatdata_id").val(c);
+                    $("#submit").val("update");
+                }
+            </script>
         </div>
     </div>
    

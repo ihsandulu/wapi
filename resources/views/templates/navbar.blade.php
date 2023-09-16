@@ -1,5 +1,5 @@
 <!-- Top navigation-->
-<nav class="navbar navbar-expand-lg navbar-light border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom" style="z-index:100;">
   <div class="container-fluid">
     
       @auth      
